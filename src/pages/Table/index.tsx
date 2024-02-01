@@ -11,6 +11,7 @@ import { Button, Divider, Drawer, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import CreateForm from './components/CreateForm';
 import UpdateForm, { FormValueType } from './components/UpdateForm';
+import FadeIn from '@/components/FadeIn';
 
 const { addUser, queryUserList, deleteUser, modifyUser } =
   services.UserController;
@@ -140,130 +141,132 @@ const TableList: React.FC<unknown> = () => {
   ];
 
   return (
-    <PageContainer
-      header={{
-        title: 'CRUD 示例',
-      }}
-    >
-      <ProTable<API.UserInfo>
-        headerTitle="查询表格"
-        actionRef={actionRef}
-        rowKey="id"
-        search={{
-          labelWidth: 120,
+    <FadeIn>
+      <PageContainer
+        header={{
+          title: 'CRUD 示例',
         }}
-        toolBarRender={() => [
-          <Button
-            key="1"
-            type="primary"
-            onClick={() => handleModalVisible(true)}
-          >
-            新建
-          </Button>,
-        ]}
-        request={async (params, sorter, filter) => {
-          const { data, success } = await queryUserList({
-            ...params,
-            // FIXME: remove @ts-ignore
-            // @ts-ignore
-            sorter,
-            filter,
-          });
-          return {
-            data: data?.list || [],
-            success,
-          };
-        }}
-        columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => setSelectedRows(selectedRows),
-        }}
-      />
-      {selectedRowsState?.length > 0 && (
-        <FooterToolbar
-          extra={
-            <div>
-              已选择{' '}
-              <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
-              项&nbsp;&nbsp;
-            </div>
-          }
-        >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
-          <Button type="primary">批量审批</Button>
-        </FooterToolbar>
-      )}
-      <CreateForm
-        onCancel={() => handleModalVisible(false)}
-        modalVisible={createModalVisible}
       >
-        <ProTable<API.UserInfo, API.UserInfo>
-          onSubmit={async (value) => {
-            const success = await handleAdd(value);
-            if (success) {
-              handleModalVisible(false);
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
-            }
-          }}
+        <ProTable<API.UserInfo>
+          headerTitle="查询表格"
+          actionRef={actionRef}
           rowKey="id"
-          type="form"
+          search={{
+            labelWidth: 120,
+          }}
+          toolBarRender={() => [
+            <Button
+              key="1"
+              type="primary"
+              onClick={() => handleModalVisible(true)}
+            >
+              新建
+            </Button>,
+          ]}
+          request={async (params, sorter, filter) => {
+            const { data, success } = await queryUserList({
+              ...params,
+              // FIXME: remove @ts-ignore
+              // @ts-ignore
+              sorter,
+              filter,
+            });
+            return {
+              data: data?.list || [],
+              success,
+            };
+          }}
           columns={columns}
+          rowSelection={{
+            onChange: (_, selectedRows) => setSelectedRows(selectedRows),
+          }}
         />
-      </CreateForm>
-      {stepFormValues && Object.keys(stepFormValues).length ? (
-        <UpdateForm
-          onSubmit={async (value) => {
-            const success = await handleUpdate(value);
-            if (success) {
-              handleUpdateModalVisible(false);
-              setStepFormValues({});
-              if (actionRef.current) {
-                actionRef.current.reload();
-              }
+        {selectedRowsState?.length > 0 && (
+          <FooterToolbar
+            extra={
+              <div>
+                已选择{' '}
+                <a style={{ fontWeight: 600 }}>{selectedRowsState.length}</a>{' '}
+                项&nbsp;&nbsp;
+              </div>
             }
-          }}
-          onCancel={() => {
-            handleUpdateModalVisible(false);
-            setStepFormValues({});
-          }}
-          updateModalVisible={updateModalVisible}
-          values={stepFormValues}
-        />
-      ) : null}
-
-      <Drawer
-        width={600}
-        open={!!row}
-        onClose={() => {
-          setRow(undefined);
-        }}
-        closable={false}
-      >
-        {row?.name && (
-          <ProDescriptions<API.UserInfo>
-            column={2}
-            title={row?.name}
-            request={async () => ({
-              data: row || {},
-            })}
-            params={{
-              id: row?.name,
+          >
+            <Button
+              onClick={async () => {
+                await handleRemove(selectedRowsState);
+                setSelectedRows([]);
+                actionRef.current?.reloadAndRest?.();
+              }}
+            >
+              批量删除
+            </Button>
+            <Button type="primary">批量审批</Button>
+          </FooterToolbar>
+        )}
+        <CreateForm
+          onCancel={() => handleModalVisible(false)}
+          modalVisible={createModalVisible}
+        >
+          <ProTable<API.UserInfo, API.UserInfo>
+            onSubmit={async (value) => {
+              const success = await handleAdd(value);
+              if (success) {
+                handleModalVisible(false);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
             }}
+            rowKey="id"
+            type="form"
             columns={columns}
           />
-        )}
-      </Drawer>
-    </PageContainer>
+        </CreateForm>
+        {stepFormValues && Object.keys(stepFormValues).length ? (
+          <UpdateForm
+            onSubmit={async (value) => {
+              const success = await handleUpdate(value);
+              if (success) {
+                handleUpdateModalVisible(false);
+                setStepFormValues({});
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                }
+              }
+            }}
+            onCancel={() => {
+              handleUpdateModalVisible(false);
+              setStepFormValues({});
+            }}
+            updateModalVisible={updateModalVisible}
+            values={stepFormValues}
+          />
+        ) : null}
+
+        <Drawer
+          width={600}
+          open={!!row}
+          onClose={() => {
+            setRow(undefined);
+          }}
+          closable={false}
+        >
+          {row?.name && (
+            <ProDescriptions<API.UserInfo>
+              column={2}
+              title={row?.name}
+              request={async () => ({
+                data: row || {},
+              })}
+              params={{
+                id: row?.name,
+              }}
+              columns={columns}
+            />
+          )}
+        </Drawer>
+      </PageContainer>
+    </FadeIn>
   );
 };
 

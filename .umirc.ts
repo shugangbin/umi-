@@ -8,17 +8,22 @@ export default defineConfig({
   request: {},
   layout: {
     title: '@umijs/max',
-    hideMenu:true,
-    hideNav:true,
     
   },
   routes: [
     {
       path: '/',
-      // redirect: '/home',
+      redirect: '/home',
       component: './index',
       layout:false,
 
+    },
+    { path: '/*', component: '@/pages/404' },
+    {
+      name: 'login',
+      path: '/login',
+      component: './Login',
+      layout:false,
     },
     {
       name: '首页',
