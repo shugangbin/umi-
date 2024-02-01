@@ -7,11 +7,12 @@ import type { TabsProps } from 'antd';
 import Register from './Register';
 import Login from './Login';
 import withAuth from '@/components/withAuth/withAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 const LoginIndex = () => {
  const [activeKey,setActiveKey]= useState('1');
+
   const items: TabsProps['items'] = [
     {
       key: '2',
@@ -24,6 +25,7 @@ const LoginIndex = () => {
       children: <Login toLogin={()=>setActiveKey('1')} />,
     },
   ];
+
   
   return (
     <Flex style={{ height: '100vh', background: '#f4f4f4', width: '100%' }}>

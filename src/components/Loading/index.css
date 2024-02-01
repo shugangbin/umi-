@@ -2,6 +2,8 @@
 .two-balls {
     position: relative;
     width: 44px;
+    height: 45px;
+    margin-top: 20px;
   }
   
   .two-balls div {
