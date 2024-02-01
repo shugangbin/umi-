@@ -1,3 +1,6 @@
+
+type ButtonClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => void;
+
 interface TextProps {
   size?: number;
   color?: string;
@@ -6,12 +9,13 @@ interface TextProps {
   bold?: number;
   children: any;
   style?: React.CSSProperties;
+  onClick?: ButtonClickHandler;
 }
 const unit = 'px';
 const defaultFontSize = 15;
 
 const Text = (props: TextProps) => {
-  const { children, paddingLeft, paddingRight, size, color, bold, style } =
+  const { children, paddingLeft, paddingRight, size, color, bold, style,onClick } =
     props;
   let defaultStyle: React.CSSProperties = {
     fontSize: (size || defaultFontSize)+unit,
@@ -33,7 +37,7 @@ const Text = (props: TextProps) => {
       ...style,
     };
   }
-  return <span style={defaultStyle}>{children}</span>;
+  return <span style={defaultStyle} onClick={(v:any)=>onClick?.(v)}>{children}</span>;
 };
 
 export default Text;

@@ -15,6 +15,7 @@ interface FlexProps {
   backgroundColor?: string;
   style?: React.CSSProperties;
   children?:any;
+  className?:any;
 }
 
 const styleProps = [
@@ -43,11 +44,13 @@ const Flex = (props: FlexProps) => {
     marginRight,
     backgroundColor,
     style,
-    children
+    children,
+    className
   } = props;
   let defaultStyle: React.CSSProperties = {
     display: 'flex',
     justifyContent: 'center',
+    position:'relative',
     flexDirection:flexDirection || 'row',
     alignItems: 'center',
     paddingLeft: horizontalPadding,
@@ -76,7 +79,7 @@ const Flex = (props: FlexProps) => {
     };
   }
 
-  return <div style={defaultStyle}>{children}</div>;
+  return <div className={className} style={defaultStyle}>{children}</div>;
 };
 
 export default Flex;

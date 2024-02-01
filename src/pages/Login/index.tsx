@@ -2,52 +2,36 @@ import Flex from '@/components/Flex';
 import Text from '@/components/Text';
 import { Button, Input } from 'antd';
 import styles from './index.less';
+import { Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import Register from './Register';
+import Login from './Login';
+import withAuth from '@/components/withAuth/withAuth';
+import { useState } from 'react';
 
-const Login = () => {
+
+const LoginIndex = () => {
+ const [activeKey,setActiveKey]= useState('1');
+  const items: TabsProps['items'] = [
+    {
+      key: '2',
+      label: 'Tab 1',
+      children: <Register toLogin={()=>setActiveKey('2')} />,
+    },
+    {
+      key: '1',
+      label: 'Tab 2',
+      children: <Login toLogin={()=>setActiveKey('1')} />,
+    },
+  ];
+  
   return (
-    <Flex style={{ height: '100vh', background: '#f4f4f4' }}>
+    <Flex style={{ height: '100vh', background: '#f4f4f4', width: '100%' }}>
       <div>
-        <Flex
-          backgroundColor="#fff"
-          flexDirection="column"
-          horizontalPadding={50}
-          style={{
-            width: 450,
-            height: 300,
-            borderRadius: 8,
-            boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)',
-          }}
-        >
-          <Flex>
-            <Text bold={600} size={25}>
-              创建账户
-            </Text>
-          </Flex>
-          <Flex>
-            <Text>已有账户？</Text>
-            <Button type="text">登录</Button>
-            <Text>登录</Text>
-          </Flex>
-          <Flex verticalPadding={16}>
-            <Input className={styles.userName} />
-          </Flex>
-
-          <Flex verticalPadding={0}>
-            <Input className={styles.password} />
-          </Flex>
-
-          <Flex verticalPadding={32} style={{ width: '100%' }}>
-            <Button type="primary" style={{ width: '50%' }}>
-              登录
-            </Button>
-          </Flex>
-        </Flex>
-        <Flex style={{ backgroundColor: 'rgb(0,8,66)' }}>
-          <img src={require('@/assets/img/login_logo.jpg')} />
-        </Flex>
+      <Tabs defaultActiveKey="1" items={items} activeKey={activeKey} tabBarStyle={{display:'none'}}  />
       </div>
     </Flex>
   );
 };
 
-export default Login;
+export default withAuth(LoginIndex);

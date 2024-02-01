@@ -9,7 +9,7 @@ const useUser = () => {
     name,
     token,
     setName,
-    setToken,
+    setToken:(v:string)=>setToken(v),
   };
 };
 
